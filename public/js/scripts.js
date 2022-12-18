@@ -1,28 +1,37 @@
-const cardList = [
-    {
-        title: "dog 2",
-        image: "images/download.jpg",
-        link: "About dog 2",
-        desciption: "Demo desciption about dog 2"
-    },
-    {
-        title: "dog 3",
-        image: "images/download.jpeg",
-        link: "About dog 3",
-        desciption: "Demo desciption about dog 3"
-    }
-]
+const getProjects = () => {
+    $.get('/api/projects',(response) => {
+        if(response.statusCode==200){
+            addCards(response.data);
+        }
+    })
+}
+
 const clickMe = () => {
     alert("Thanks for clicking me. Hope you have a nice day!")
 }
 
 const submitForm = () => {
-    let formData = {};
-    formData.first_name = $('#first_name').val();
-    formData.last_name = $('#last_name').val();
-    formData.password = $('#password').val();
-    formData.email = $('#email').val();
+        let formData = {};
+    formData.title = $('#title').val();
+    formData.image = $('#image').val();
+    formData.link = $('#link').val();
+    formData.description = $('#description').val();
+
     console.log("Form Data Submitted: ", formData);
+    addProjectToApp(formData);
+}
+
+//ajax function...
+const addProjectToApp = (project) => {
+    $.ajax({
+        url: '/api/projects',
+        data: project,
+        type: 'POST',
+        success: (result) => {
+            alert(result.message);
+            location.reload(); // it automatically reloads the page 
+        }
+    })
 }
 
 const addCards = (items) => {
@@ -44,6 +53,6 @@ $(document).ready(function(){
     $('#formSubmit').click(()=>{
         submitForm();
     })
-    addCards(cardList);
+    getProjects();
     $('.modal').modal();
   });
